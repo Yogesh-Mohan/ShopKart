@@ -26,7 +26,7 @@
     <h2 class="section-title text-center">Shop by Categories</h2>
     <div class="row">
       {% for category in categories %}
-      <div class="col-md-4 mb-4 fade-up" style="animation-delay: {{ forloop.counter0|add:0.1 }}s">
+      <div class="col-md-4 mb-4 fade-up" style="animation-delay: 0.{{ forloop.counter0 }}s">
         <div class="custom-card h-100">
           <div class="card-img-wrapper">
             {% if category.images %}
@@ -55,7 +55,7 @@
     <h2 class="section-title text-center">Trending Now</h2>
     <div class="row">
       {% for product in trending_products %}
-      <div class="col-lg-3 col-md-6 mb-4 fade-up" style="animation-delay: {{ forloop.counter0|add:0.1 }}s">
+      <div class="col-lg-3 col-md-6 mb-4 fade-up" style="animation-delay: 0.{{ forloop.counter0 }}s">
         <div class="custom-card h-100">
           <div class="card-img-wrapper position-relative">
             {% if product.trending %}
