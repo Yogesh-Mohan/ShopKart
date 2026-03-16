@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +23,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(6jb1cz8#ku1$kl3!l*$+0slj^*gm$vbfeshcyj5x16+c@%*4%'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-(6jb1cz8#ku1$kl3!l*$+0slj^*gm$vbfeshcyj5x16+c@%*4%')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['.onrender.com']
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv('ALLOWED_HOSTS', '.onrender.com,127.0.0.1,localhost').split(',')
+    if host.strip()
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv('CSRF_TRUSTED_ORIGINS', 'https://*.onrender.com').split(',')
+    if origin.strip()
+]
 
 
 # Application definition
@@ -74,10 +87,13 @@ WSGI_APPLICATION = 'online_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(
+        os.getenv(
+            'DATABASE_URL',
+            'mysql://root:@localhost:3306/django_shop',
+        ),
+        conn_max_age=600,
+    )
 }
 
 
@@ -116,10 +132,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
 STATICFILES_DIRS = [
-    BASE_DIR / "static",'.onrender.com/static'
+    BASE_DIR / 'static',
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL='/images/'  # URL to access media files
 MEDIA_ROOT=BASE_DIR/'static'  # ( static la folder name (folder name than podanum) atha poi photo store agum)
