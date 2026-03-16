@@ -1,0 +1,88 @@
+{% extends 'shop/layout/main.html' %}
+
+{% block title %}Register - ShopKart{% endblock title %}
+
+{% block content %}
+<div class="py-5" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); min-height: 80vh; display: flex; align-items: center;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-10 fade-up">
+                <div class="custom-card border-0 bg-white p-4 p-md-5" style="border-radius: 30px;">
+                    <div class="text-center mb-5">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 80px; height: 80px;">
+                            <i class="fa-solid fa-user-plus text-primary fs-1"></i>
+                        </div>
+                        <h2 class="fw-bold">Join ShopKart</h2>
+                        <p class="text-muted">Create your account to start shopping today</p>
+                    </div>
+
+                    <form action="{% url 'register' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold text-muted text-uppercase">First Name</label>
+                                <input type="text" name="first_name" class="form-control bg-light border-0 py-3" required placeholder="John" style="border-radius: 12px;">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Last Name</label>
+                                <input type="text" name="last_name" class="form-control bg-light border-0 py-3" required placeholder="Doe" style="border-radius: 12px;">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="fa-solid fa-at text-muted"></i></span>
+                                <input type="text" name="username" class="form-control bg-light border-0 py-3" required placeholder="johndoe123" style="border-radius: 0 12px 12px 0;">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Email address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="fa-solid fa-envelope text-muted"></i></span>
+                                <input type="email" name="email" class="form-control bg-light border-0 py-3" required placeholder="john@example.com" style="border-radius: 0 12px 12px 0;">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0"><i class="fa-solid fa-key text-muted"></i></span>
+                                    <input type="password" name="password" class="form-control bg-light border-0 py-3" required placeholder="••••••••" style="border-radius: 0 12px 12px 0;">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0"><i class="fa-solid fa-shield-check text-muted"></i></span>
+                                    <input type="password" name="confirm_password" class="form-control bg-light border-0 py-3" required placeholder="••••••••" style="border-radius: 0 12px 12px 0;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms" required>
+                                <label class="form-check-label small text-muted" for="terms">
+                                    I agree to the <a href="#" class="text-primary text-decoration-none">Terms of Service</a> and <a href="#" class="text-primary text-decoration-none">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow-lg mb-4">
+                            Create Account <i class="fa-solid fa-circle-check ms-2"></i>
+                        </button>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="text-muted mb-0">Already have an account? <a href="{% url 'login' %}"
+                                class="text-primary text-decoration-none fw-bold">Sign in here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,67 @@
+{% extends 'shop/layout/main.html' %}
+
+{% block title %}Search Results for "{{ query }}" - ShopKart{% endblock title %}
+
+{% block content %}
+<div class="py-5" style="background: linear-gradient(to bottom, #f8fafc, #ffffff);">
+    <div class="container">
+        <div class="row mb-5 fade-up">
+            <div class="col-12">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb bg-transparent p-0">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-muted text-decoration-none">Home</a></li>
+                        <li class="breadcrumb-item active text-primary fw-bold" aria-current="page">Search Results</li>
+                    </ol>
+                </nav>
+                <h1 class="section-title">Found for: <span class="text-primary">"{{ query }}"</span></h1>
+                <p class="text-muted">{{ products|length }} products matching your criteria</p>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for product in products %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4 fade-up" style="animation-delay: 0.{{ forloop.counter0 }}s">
+                <div class="custom-card h-100">
+                    <div class="card-img-wrapper">
+                        {% if product.product_images %}
+                        <img src="{{ product.product_images.url }}" class="card-img-top" alt="{{ product.name }}"
+                            style="height: 250px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <i class="fa-solid fa-tag fs-1 text-muted opacity-25"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body p-4">
+                        <small class="text-uppercase tracking-wider text-muted small mb-1 d-block">{{ product.vendor }}</small>
+                        <h6 class="card-title text-truncate fw-bold mb-3" title="{{ product.name }}">{{ product.name }}</h6>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fs-5 fw-bold text-dark">₹{{ product.selling_price }}</span>
+                            {% if product.original_price != product.selling_price %}
+                            <small class="text-muted text-decoration-line-through">₹{{ product.original_price }}</small>
+                            {% endif %}
+                        </div>
+                        
+                        <a href="{% url 'product_detail' product.category.name product.name %}"
+                            class="btn btn-primary w-100">Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5 fade-up">
+                <div class="mb-4">
+                    <i class="fa-solid fa-cloud-moon text-light" style="font-size: 8rem;"></i>
+                </div>
+                <h2 class="fw-bold mb-3">No Results Found</h2>
+                <p class="text-muted mb-4 fs-5">We couldn't find anything matching "<span class="fw-bold text-dark">{{ query }}</span>".</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'collections' %}" class="btn btn-primary px-5 py-3 rounded-pill shadow-lg">Browse Categories</a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-dark px-5 py-3 rounded-pill">Back to Home</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
