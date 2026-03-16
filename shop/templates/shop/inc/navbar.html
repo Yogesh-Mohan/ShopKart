@@ -1,0 +1,74 @@
+<!-- Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}">
+        <i class="fa-solid fa-cart-shopping me-2"></i>ShopKart
+    </a>
+    
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link px-3" href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="{% url 'collections' %}">Categories</a>
+        </li>
+      </ul>
+      
+      <!-- Search Form -->
+      <form class="d-flex mx-lg-4 my-2 my-lg-0 flex-grow-1 justify-content-center" method="GET" action="{% url 'search' %}">
+        <div class="search-container d-flex align-items-center w-100" style="max-width: 400px;">
+          <i class="fa-solid fa-magnifying-glass ms-3 text-muted"></i>
+          <input class="search-input" type="search" name="q" placeholder="Search products..." aria-label="Search">
+        </div>
+      </form>
+      
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link px-3 position-relative" href="{% url 'cart' %}">
+              <i class="fa-solid fa-bag-shopping fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                {% if cart_count %}{{ cart_count }}{% else %}0{% endif %}
+              </span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle px-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="fa-solid fa-circle-user me-1"></i> {{ user.first_name|default:user.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg" style="border-radius: 12px; margin-top: 15px;">
+              <li><a class="dropdown-item py-2" href="#"><i class="fa-solid fa-user me-2 opacity-50"></i>Profile</a></li>
+              <li><a class="dropdown-item py-2" href="#"><i class="fa-solid fa-box me-2 opacity-50"></i>Orders</a></li>
+              <li><hr class="dropdown-divider opacity-10"></li>
+              <li><a class="dropdown-item py-2 text-danger" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket me-2 opacity-50"></i>Logout</a></li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-primary px-4 ms-2 text-white" href="{% url 'register' %}" style="display:inline-block;">Join Now</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script>
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 50) {
+      document.querySelector('.navbar').classList.add('scrolled');
+    } else {
+      document.querySelector('.navbar').classList.remove('scrolled');
+    }
+  });
+</script>

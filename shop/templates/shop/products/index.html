@@ -1,0 +1,75 @@
+{% extends 'shop/layout/main.html' %}
+
+{% block title %}
+{{ category_name }}
+
+ Products - ShopKart
+ 
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'collections' %}">Categories</a></li>
+          <li class="breadcrumb-item active">{{ category_name }}</li>
+        </ol>
+      </nav>
+      
+      <h2 class="mb-4">{{ category_name }} Products</h2>
+    </div>
+  </div>
+
+  <div class="row">
+    {% for product in products %}
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+      <div class="card h-100 shadow-sm">
+        {% if product.product_images %}
+          <img src="{{ product.product_images.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+        {% else %}
+          <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+            <span class="text-muted">No Image</span>
+          </div>
+        {% endif %}
+        
+        <div class="card-body">
+          <h6 class="card-title">{{ product.name }}</h6>
+          <p class="card-text text-muted small">{{ product.vendor }}</p>
+          <p class="card-text">{{ product.description|truncatewords:10 }}</p>
+          
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-success fw-bold">₹{{ product.selling_price }}</span>
+            {% if product.original_price != product.selling_price %}
+              <small class="text-decoration-line-through text-muted">₹{{ product.original_price }}</small>
+            {% endif %}
+          </div>
+          
+          {% if product.quantity > 0 %}
+            <span class="badge bg-success mb-2">In Stock</span>
+          {% else %}
+            <span class="badge bg-danger mb-2">Out of Stock</span>
+          {% endif %}
+          
+          {% if product.trending %}
+            <span class="badge bg-warning text-dark mb-2">Trending</span>
+          {% endif %}
+          
+          <a href="{% url 'product_detail' product.category.name product.name %}" class="btn btn-primary btn-sm w-100">View Details</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="text-center py-5">
+        <h4>No Products Found</h4>
+        <p class="text-muted">No products available in this category yet.</p>
+        <a href="{% url 'collections' %}" class="btn btn-primary">Browse Other Categories</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}

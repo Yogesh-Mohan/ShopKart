@@ -1,0 +1,202 @@
+{% extends 'shop/layout/main.html' %}
+
+{% block title %}
+{{ product.name }} - ShopKart
+{% endblock title %}
+
+{% block content %}
+<div class="py-5" style="background: linear-gradient(to bottom, #f8fafc, #ffffff);">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-5 fade-up">
+            <ol class="breadcrumb" style="background: white; padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-muted text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'collections' %}" class="text-muted text-decoration-none">Categories</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'collectionsview' product.category.name %}" class="text-muted text-decoration-none">{{ product.category.name }}</a></li>
+                <li class="breadcrumb-item active text-primary fw-bold" aria-current="page">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="row g-5">
+            <!-- Product Image -->
+            <div class="col-lg-6 fade-up">
+                <div class="custom-card p-2" style="border-radius: 24px;">
+                    {% if product.product_images %}
+                        <img src="{{ product.product_images.url }}" class="img-fluid" alt="{{ product.name }}" style="border-radius: 20px; width: 100%; height: auto;">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 500px; border-radius: 20px;">
+                            <i class="fa-solid fa-image fs-1 text-muted opacity-25"></i>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-lg-6 fade-up" style="animation-delay: 0.2s">
+                <div class="product-info-card p-lg-4">
+                    <div class="mb-4">
+                        <span class="badge bg-soft-primary text-primary px-3 py-2 mb-2" style="background: rgba(99, 102, 241, 0.1); border-radius: 8px;">
+                            {{ product.category.name }}
+                        </span>
+                        {% if product.trending %}
+                            <span class="badge bg-soft-danger text-danger px-3 py-2 mb-2 ms-2" style="background: rgba(239, 68, 68, 0.1); border-radius: 8px;">
+                                🔥 Trending Now
+                            </span>
+                        {% endif %}
+                        <h1 class="display-5 fw-bold mb-2">{{ product.name }}</h1>
+                        <p class="text-muted mt-2 fs-5">By <span class="text-dark fw-semibold">{{ product.vendor }}</span></p>
+                    </div>
+
+                    <div class="price-section mb-4 d-flex align-items-center">
+                        <span class="display-4 fw-bold text-primary">₹{{ product.selling_price }}</span>
+                        {% if product.original_price != product.selling_price %}
+                            <span class="ms-3 text-muted text-decoration-line-through fs-4">₹{{ product.original_price }}</span>
+                            <span class="ms-3 badge bg-success px-2 py-1" style="font-size: 0.9rem;">
+                                {% widthratio product.selling_price product.original_price 100 as discount %}
+                                SAVE {{ 100|add:discount }}%
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <hr class="opacity-10 my-4">
+
+                    <p class="text-muted fs-5 leading-relaxed mb-4">
+                        {{ product.description }}
+                    </p>
+
+                    <div class="purchase-actions mt-5">
+                        {% if product.quantity > 0 %}
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="badge rounded-circle bg-success me-2" style="width: 10px; height: 10px; display: inline-block; padding: 0;"></span>
+                                <span class="text-success fw-bold">Ready for Shipment</span>
+                                <span class="text-muted ms-2">({{ product.quantity }} available)</span>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-lg border rounded-3 overflow-hidden shadow-sm">
+                                        <button class="btn btn-light border-0 px-3" type="button" id="qty-minus"><i class="fa-solid fa-minus"></i></button>
+                                        <input type="number" class="form-control border-0 text-center fw-bold fs-5" id="product_qty" value="1" min="1" max="{{ product.quantity }}" style="background: transparent;">
+                                        <button class="btn btn-light border-0 px-3" type="button" id="qty-plus"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <button class="btn btn-primary btn-lg w-100 py-3 shadow-lg add-to-cart-btn" data-product-id="{{ product.id }}">
+                                        <i class="fa-solid fa-cart-plus me-2"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="d-flex align-items-center mb-4 text-danger">
+                                <i class="fa-solid fa-circle-xmark me-2 fs-5"></i>
+                                <span class="fw-bold">Currently Out of Stock</span>
+                            </div>
+                            <button class="btn btn-dark btn-lg w-100 py-3 disabled" style="opacity: 0.5;">
+                                <i class="fa-solid fa-bell me-2"></i> Notify Me When Available
+                            </button>
+                        {% endif %}
+                    </div>
+
+                    <div class="features-list mt-5 p-4 rounded-4" style="background: #f1f5f9;">
+                        <h6 class="text-uppercase tracking-wider fw-bold text-muted mb-3" style="font-size: 0.75rem;">Premium Shopping Experience</h6>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-truck-fast text-primary me-2"></i>
+                                    <span class="small fw-semibold">Express Delivery</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-shield-check text-primary me-2"></i>
+                                    <span class="small fw-semibold">Secure Checkout</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-arrows-rotate text-primary me-2"></i>
+                                    <span class="small fw-semibold">30 Days Return</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-award text-primary me-2"></i>
+                                    <span class="small fw-semibold">1 Year Warranty</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Quantity Controls
+        const minusBtn = document.getElementById('qty-minus');
+        const plusBtn = document.getElementById('qty-plus');
+        const qtyInput = document.getElementById('product_qty');
+        
+        if (minusBtn && plusBtn && qtyInput) {
+            minusBtn.addEventListener('click', () => {
+                let val = parseInt(qtyInput.value);
+                if (val > 1) qtyInput.value = val - 1;
+            });
+            plusBtn.addEventListener('click', () => {
+                let val = parseInt(qtyInput.value);
+                let max = parseInt(qtyInput.max);
+                if (val < max) qtyInput.value = val + 1;
+            });
+        }
+
+        const addToCartBtn = document.querySelector('.add-to-cart-btn');
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                const productQty = document.getElementById('product_qty').value;
+                
+                // Visual feedback
+                const originalContent = this.innerHTML;
+                this.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Adding...';
+                this.disabled = true;
+
+                fetch('{% url "add_to_cart" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        'product_id': productId,
+                        'product_qty': productQty
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'Added to cart') {
+                        this.innerHTML = '<i class="fa-solid fa-check me-2"></i> In Cart';
+                        this.classList.remove('btn-primary');
+                        this.classList.add('btn-success');
+                        
+                        // Optional: Show toast or notify user
+                    } else {
+                        alert(data.status);
+                        this.innerHTML = originalContent;
+                        this.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.innerHTML = originalContent;
+                    this.disabled = false;
+                });
+            });
+        }
+    });
+</script>
+{% endblock script %}
